@@ -24,7 +24,8 @@
 #define _PD_CONTEXT_H_
 
 #include <map>
-#include <pthread.h>
+#include <mutex>
+
 #include "OrderedMessageQueue.h"
 #include "PdGraph.h"
 #include "ZGCallbackFunction.h"
@@ -70,8 +71,8 @@ class PdContext {
     
     void process(float *inputBuffers, float *outputBuffers);
   
-    void lock() { pthread_mutex_lock(&contextLock); }
-    void unlock() { pthread_mutex_unlock(&contextLock); }
+    void lock() { contextLock.lock(); }
+    void unlock() { contextLock.unlock(); }
   
     /** Globally register a remote message receiver (e.g. [send] or [notein]). */
     void registerRemoteMessageReceiver(RemoteMessageReceiver *receiver);
@@ -231,7 +232,7 @@ class PdContext {
     vector<PdGraph *> graphList;
   
     /** A thread lock used to access critical sections of this context. */
-    pthread_mutex_t contextLock;
+    std::recursive_mutex contextLock;
     
     int numBytesInInputBuffers;
     int numBytesInOutputBuffers;

@@ -42,7 +42,8 @@
 #pragma mark Constructor/Deconstructor
 
 PdContext::PdContext(int numInputChannels, int numOutputChannels, int blockSize, float sampleRate,
-    void *(*function)(ZGCallbackFunction, void *, void *), void *userData) {
+    void *(*function)(ZGCallbackFunction, void *, void *), void *userData)
+    : contextLock() {
   this->numInputChannels = numInputChannels;
   this->numOutputChannels = numOutputChannels;
   this->blockSize = blockSize;
@@ -66,12 +67,6 @@ PdContext::PdContext(int numInputChannels, int numOutputChannels, int blockSize,
   sendController = new MessageSendController(this);
 
   abstractionDatabase = new PdAbstractionDataBase();
-  
-  // configure the context lock, which is recursive
-  pthread_mutexattr_t mta;
-  pthread_mutexattr_init(&mta);
-  pthread_mutexattr_settype(&mta, PTHREAD_MUTEX_RECURSIVE);
-  pthread_mutex_init(&contextLock, &mta);
 }
 
 PdContext::~PdContext() {
@@ -89,8 +84,6 @@ PdContext::~PdContext() {
   }
 
   delete abstractionDatabase;
-
-  pthread_mutex_destroy(&contextLock);
 }
 
 
