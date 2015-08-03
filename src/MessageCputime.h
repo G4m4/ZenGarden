@@ -23,7 +23,8 @@
 #ifndef _MESSAGE_CPUTIME_H_
 #define _MESSAGE_CPUTIME_H_
 
-#include <sys/time.h>
+#include <chrono>
+
 #include "MessageObject.h"
 
 /** [cputime]: returns the elapsed real time. */
@@ -40,7 +41,7 @@ class MessageCputime : public MessageObject {
   private:
     void processMessage(int inletIndex, PdMessage *message);
   
-    timeval start;
+    std::chrono::time_point<std::chrono::high_resolution_clock> start;
 };
 
 inline const char *MessageCputime::getObjectLabel() {

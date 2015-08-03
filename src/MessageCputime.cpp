@@ -20,6 +20,8 @@
  *
  */
 
+#include <chrono>
+
 #include "MessageCputime.h"
 
 MessageObject *MessageCputime::newObject(PdMessage *initMessage, PdGraph *graph) {
@@ -38,17 +40,15 @@ void MessageCputime::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: {
       if (message->isBang(0)) {
-        gettimeofday(&start, NULL);
+        start = std::chrono::high_resolution_clock::now();
       }
       break;
     }
     case 1: {
       if (message->isBang(0)) {
-        timeval end;
-        gettimeofday(&end, NULL);
-        double elapsedTime = (end.tv_sec - start.tv_sec) * 1000.0; // sec to ms
-        elapsedTime += (end.tv_usec - start.tv_usec) / 1000.0; // us to ms
-        
+        const auto end(std::chrono::high_resolution_clock::now());
+        const double elapsedTime = (end - start).count() * 1000.0; // sec to ms
+
         PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
         outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), (float) elapsedTime);
         sendMessage(0, outgoingMessage);

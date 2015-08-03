@@ -20,9 +20,10 @@
  *
  */
 
-#include <sys/time.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
+
+#include <chrono>
 
 #include "ZenGarden.h"
 
@@ -70,19 +71,20 @@ int main(int argc, char * const argv[]) {
   
   float *inputBuffers = (float *) calloc(numInputChannels * blockSize, sizeof(float));
   float *outputBuffers = (float *) calloc(numOutputChannels * blockSize, sizeof(float));
-  
-  timeval start, end;
-  gettimeofday(&start, NULL);
+
+  const auto start = std::chrono::high_resolution_clock::now();
+
   for (int i = 0; i < NUM_ITERATIONS; i++) {
   //while (1) {
     zg_context_process(context, inputBuffers, outputBuffers);
   }
-  gettimeofday(&end, NULL);
-  double elapsedTime = (end.tv_sec - start.tv_sec) * 1000.0; // sec to ms
-  elapsedTime += (end.tv_usec - start.tv_usec) / 1000.0; // us to ms
+
+  const auto end = std::chrono::high_resolution_clock::now();
+  const std::chrono::duration<double> elapsedTimeSeconds = (end - start);  // seconds
+  const double elapsedTime(elapsedTimeSeconds.count() * 1000.0);  // milliseconds
   printf("Runtime is: %i iterations in %f milliseconds == %f iterations/second.\n", NUM_ITERATIONS,
     elapsedTime, ((double) NUM_ITERATIONS)*1000.0/elapsedTime);
-  double simulatedTime = ((double) blockSize / (double) sampleRate) * (double) NUM_ITERATIONS * 1000.0; // milliseconds
+  const double simulatedTime = ((double)blockSize / (double)sampleRate) * (double)NUM_ITERATIONS * 1000.0; // milliseconds
   printf("Runs in realtime: %s (x%.3f)\n", (simulatedTime >= elapsedTime) ? "YES" : "NO", simulatedTime/elapsedTime);
   
   zg_context_delete(context);
