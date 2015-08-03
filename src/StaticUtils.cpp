@@ -24,7 +24,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "regex.h"
+
+#include <regex>
+
 #include "StaticUtils.h"
 
 StaticUtils::StaticUtils() {
@@ -47,10 +49,9 @@ char *StaticUtils::copyString(const char *str) {
 
 bool StaticUtils::isNumeric(const char *str) {
   // http://www.regular-expressions.info/floatingpoint.html
-  regex_t preg;
-  regcomp(&preg, "^[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?$", REG_NOSUB | REG_EXTENDED);
-  bool isFloat = (regexec(&preg, str, 0, NULL, 0) == 0);
-  regfree(&preg);
+  const std::string regex_pattern("^[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?$");
+  const std::regex preg(regex_pattern);
+  const bool isFloat = std::regex_search(str, preg);
   return isFloat;
 }
 
