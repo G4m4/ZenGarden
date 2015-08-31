@@ -82,7 +82,7 @@ vector<string> StaticUtils::tokenizeString(const char *str, const char *delim) {
   string s0 = string(str);
   
   const char *head = str;
-  char *tail = NULL;
+  const char *tail = NULL;
   while ((tail = strstr(head, delim)) != NULL) {
     int numBytes = tail-head;
     string nextToken = string(s0, head-str, numBytes);
