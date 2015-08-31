@@ -64,7 +64,7 @@ class PdGraph : public DspObject {
     void receiveMessage(int inletIndex, PdMessage *message);
   
   
-#pragma mark - Add/Remove Connection
+    // Add/Remove Connection
   
     /** Connect the given <code>MessageObject</code>s from the given outlet to the given inlet. */
     void addConnection(int fromObjectIndex, int outletIndex, int toObjectIndex, int inletIndex);
@@ -72,23 +72,20 @@ class PdGraph : public DspObject {
     void removeConnection(MessageObject *fromObject, int outletIndex, MessageObject *toObject, int inletIndex);
   
 
-#pragma mark - Add/Remove Connection to/from Object
+    // Add/Remove Connection to/from Object
 
     void addConnectionFromObjectToInlet(MessageObject *messageObject, int outletIndex, int inletIndex);
     void addConnectionToObjectFromOutlet(MessageObject *messageObject, int inletIndex, int outletIndex);
     void removeConnectionFromObjectToInlet(MessageObject *messageObject, int outletIndex, int inletIndex);
     void removeConnectionToObjectFromOutlet(MessageObject *messageObject, int inletIndex, int outletIndex);
   
-#pragma mark - Get/Set Buffers
+    // Get/Set Buffers
     
     bool canSetBufferAtOutlet(unsigned int outletIndex) { return false; }
     void setDspBufferAtInlet(float *buffer, unsigned int inletIndex);
     void setDspBufferAtOutlet(float *buffer, unsigned int outletIndex);
     float *getDspBufferAtInlet(int inletIndex);
     float *getDspBufferAtOutlet(int outletIndex);
-  
-
-#pragma mark -
   
     static const char *getObjectLabel() { return "pd"; }
     ObjectType getObjectType() { return OBJECT_PD; }

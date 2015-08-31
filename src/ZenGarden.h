@@ -74,7 +74,7 @@ typedef enum ZGConnectionType {
 } ZGConnectionType;
   
   
-#pragma mark - Context
+// Context
   
   /** Create a new context to which graphs can be added. */
   ZGContext *zg_context_new(int numInputChannels, int numOutputChannels, int blockSize, float sampleRate,
@@ -118,7 +118,7 @@ typedef enum ZGConnectionType {
   void zg_context_unregister_external_object(ZGContext *context, const char *objectLabel);
   
 
-#pragma mark - Abstractions from Context
+// Abstractions from Context
 
   /** Register an abstraction from memory. */
   void zg_context_register_memorymapped_abstraction(ZGContext *context, const char *objectLabel,
@@ -127,13 +127,13 @@ typedef enum ZGConnectionType {
   /** Unregister an abstraction. */
   void zg_context_unregister_memorymapped_abstraction(ZGContext *context, const char *objectLabel);
 
-#pragma mark - Objects from Context
+// Objects from Context
   
   /** Returns the global table object with the given name. NULL if the table does not exist. */
   ZGObject *zg_context_get_table_for_name(ZGObject *table, const char *name);
 
 
-#pragma mark - Graph
+// Graph
   
   /** Deletes the given graph. If attached, the graph is automatically removed from its context. */
   void zg_graph_delete(ZGGraph *graph);
@@ -151,7 +151,7 @@ typedef enum ZGConnectionType {
   ZGObject **zg_graph_get_objects(ZGGraph *graph, unsigned int *n);
   
   
-#pragma mark - Manage Connections
+// Manage Connections
   
   /**
    * Add a connection between two objects, both of which are in the given graph. The new connection
@@ -174,7 +174,7 @@ typedef enum ZGConnectionType {
   unsigned int zg_object_get_num_outlets(ZGObject *object);
   
   
-#pragma mark - Context Process
+// Context Process
 
   /** Process the given context. Audio buffers are channel-uninterleaved with float (32-bit) samples. */
   void zg_context_process(ZGContext *context, float *inputBuffers, float *outputBuffers);
@@ -183,7 +183,7 @@ typedef enum ZGConnectionType {
   void zg_context_process_s(ZGContext *context, short *inputBuffers, short *outputBuffers);
   
   
-#pragma mark - Context Send Message
+// Context Send Message
   
   /** Send a message to the named receiver. */
   void zg_context_send_message(ZGContext *context, const char *receiverName, ZGMessage *message);
@@ -229,14 +229,14 @@ typedef enum ZGConnectionType {
   void zg_context_send_midinote(ZGContext *context, int channel, int noteNumber, int velocity, double blockIndex);
   
 
-#pragma mark - Context Un/Register External Receivers
+// Context Un/Register External Receivers
   
   void zg_context_register_receiver(ZGContext *context, const char *receiverName);
   
   void zg_context_unregister_receiver(ZGContext *context, const char *receiverName);
 
   
-#pragma mark - Object
+// Object
   
   /**
    * Create a new object with a string, e.g. "osc~ 440", "+", or "pack t t s, and add it to the graph.
@@ -291,7 +291,7 @@ typedef enum ZGConnectionType {
   char *zg_object_to_string(ZGObject *object);
   
   
-#pragma mark - Table
+// Table
   
   /**
    * Returns a direct pointer to the table's buffer with a given length. Note that if elements
@@ -307,7 +307,7 @@ typedef enum ZGConnectionType {
   void zg_table_set_buffer(ZGObject *table, float *buffer, unsigned int n);
   
 
-#pragma mark - Message
+// Message
   
   /** Returns a new message with the given timestamp and the number of elements. */
   ZGMessage *zg_message_new(double timetamp, unsigned int numElemets);

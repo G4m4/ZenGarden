@@ -65,8 +65,7 @@ void zg_graph_delete(ZGGraph *graph) {
   }
 }
 
-
-#pragma mark - Object
+// Object
 
 void zg_object_remove(MessageObject *object) {
   object->getGraph()->removeObject(object);
@@ -136,8 +135,7 @@ char *zg_object_to_string(ZGObject *object) {
   return ret;
 }
 
-
-#pragma mark - Context
+// Context
 
 ZGContext *zg_context_new(int numInputChannels, int numOutputChannels, int blockSize, float sampleRate,
       void *(*callbackFunction)(ZGCallbackFunction, void *, void *), void *userData) {
@@ -302,15 +300,13 @@ void zg_context_unregister_external_object(ZGContext *context, const char *objec
   context->unregisterExternalObject(objectLabel);
 }
 
-
-#pragma mark - Objects from Context
+// Objects from Context
 
 ZGObject *zg_context_get_table_for_name(ZGObject *table, const char *name) {
   return NULL; // TODO(mhroth): implement this
 }
 
-
-#pragma mark - Context Un/Register External Receivers
+// Context Un/Register External Receivers
 
 void zg_context_register_receiver(ZGContext *context, const char *receiverName) {
   context->registerExternalReceiver(receiverName);
@@ -320,8 +316,7 @@ void zg_context_unregister_receiver(ZGContext *context, const char *receiverName
   context->unregisterExternalReceiver(receiverName);
 }
 
-
-#pragma mark - Context Send Message
+// Context Send Message
 
 /** Send a message to the named receiver. */
 void zg_context_send_message(ZGContext *context, const char *receiverName, ZGMessage *message) {
@@ -366,7 +361,7 @@ void zg_context_send_midinote(PdContext *context, int channel, int noteNumber, i
 }
 
 
-#pragma mark - Graph
+// Graph
 
 void zg_graph_attach(ZGGraph *graph) {
   graph->getContext()->attachGraph(graph);
@@ -400,8 +395,7 @@ ZGObject **zg_graph_get_objects(ZGGraph *graph, unsigned int *n) {
   return nodeArray;
 }
 
-
-#pragma mark - Table
+// Table
 
 float *zg_table_get_buffer(MessageObject *table, unsigned int *n) {
   if (table != NULL && table->getObjectType() == MESSAGE_TABLE) {
@@ -425,8 +419,7 @@ void zg_table_set_buffer(MessageObject *table, float *buffer, unsigned int n) {
   }
 }
 
-
-#pragma mark - Message
+// Message
 
 ZGMessage *zg_message_new(double timetamp, unsigned int numElements) {
   PdMessage *message = PD_MESSAGE_ON_STACK(numElements);
