@@ -69,7 +69,7 @@ void MessageModulus::processMessage(int inletIndex, PdMessage *message) {
 }
 
 std::string MessageModulus::toString() {
-  char str[snprintf(NULL, 0, "mod %g", constant)+1];
+  char* str(static_cast<char*>(alloca(snprintf(NULL, 0, "mod %g", constant) + 1)));
   snprintf(str, sizeof(str), "mod %g", constant);
   return str;
 }

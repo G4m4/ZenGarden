@@ -65,7 +65,7 @@ void DspOsc::onInletConnectionUpdate(unsigned int inletIndex) {
 }
 
 string DspOsc::toString() {
-  char str[snprintf(NULL, 0, "%s %g", getObjectLabel(), frequency)+1];
+  char* str(static_cast<char*>(alloca(snprintf(NULL, 0, "%s %g", getObjectLabel(), frequency) + 1)));
   snprintf(str, sizeof(str), "%s %g", getObjectLabel(), frequency);
   return string(str);
 }

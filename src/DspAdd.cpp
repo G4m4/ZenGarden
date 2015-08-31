@@ -45,7 +45,7 @@ void DspAdd::onInletConnectionUpdate(unsigned int inletIndex) {
 
 std::string DspAdd::toString() {
   const char *fmt = (constant == 0.0f) ? "%s" : "%s %g";
-  char str[snprintf(NULL, 0, fmt, getObjectLabel(), constant)+1];
+  char* str(static_cast<char*>(alloca(snprintf(NULL, 0, fmt, getObjectLabel(), constant) + 1)));
   snprintf(str, sizeof(str), fmt, getObjectLabel(), constant);
   return str;
 }

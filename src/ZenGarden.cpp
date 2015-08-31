@@ -180,8 +180,8 @@ void zg_context_process_s(ZGContext *context, short *inputBuffers, short *output
   const int blockSize = context->getBlockSize();
   const int inputBufferLength = numInputChannels*blockSize;
   const int outputBufferLength = numOutputChannels*blockSize;
-  float finputBuffers[inputBufferLength];
-  float foutputBuffers[outputBufferLength];
+  float* finputBuffers(static_cast<float*>(alloca(sizeof(float) * inputBufferLength)));
+  float* foutputBuffers(static_cast<float*>(alloca(sizeof(float) * outputBufferLength)));
   
   #if __APPLE__
   // convert short to float, and uninterleave the samples into the float buffer
@@ -349,7 +349,7 @@ void zg_context_send_message_at_blockindex(PdContext *context, const char *recei
 }
 
 void zg_context_send_midinote(PdContext *context, int channel, int noteNumber, int velocity, double blockIndex) {
-  char receiverName[snprintf(NULL, 0, "zg_notein_%i", channel)+1];
+  char* receiverName(static_cast<char*>(alloca(snprintf(NULL, 0, "zg_notein_%i", channel) + 1)));
   snprintf(receiverName, sizeof(receiverName), "zg_notein_%i", channel);
   
   zg_context_send_message_at_blockindex(context, receiverName, blockIndex, "fff",
@@ -431,7 +431,8 @@ ZGMessage *zg_message_new_from_string(double timetamp, const char *initString) {
   unsigned int maxElements = (strlen(initString)/2)+1;
   PdMessage *message = PD_MESSAGE_ON_STACK(maxElements);
   // make a local copy of the initString so that strtok in initWithString won't break it
-  char str[strlen(initString)+1]; strcpy(str, initString);
+  char* str(static_cast<char*>(alloca(strlen(initString)+1)));
+  strcpy(str, initString);
   // numElements set to correct number after string is parsed
   message->initWithString(timetamp, maxElements, str);
   return message->copyToHeap();

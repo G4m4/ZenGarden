@@ -47,7 +47,7 @@ DspCatch::~DspCatch() {
 }
 
 string DspCatch::toString() {
-  char str[snprintf(NULL, 0, "%s %s", getObjectLabel(), name)+1];
+  char* str(static_cast<char*>(alloca(snprintf(NULL, 0, "%s %s", getObjectLabel(), name) + 1)));
   snprintf(str, sizeof(str), "%s %s", getObjectLabel(), name);
   return string(str);
 }

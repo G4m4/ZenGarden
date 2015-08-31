@@ -38,7 +38,7 @@ void MessageMakefilename::processMessage(int inletIndex, PdMessage *message) {
   if (inletIndex == 0) {
     switch (message->getType(0)) {
       case FLOAT: {
-        char str[snprintf(NULL, 0, format, (int) message->getFloat(0))+1];
+        char* str(static_cast<char*>(alloca(snprintf(NULL, 0, format, (int)message->getFloat(0)) + 1)));
         snprintf(str, sizeof(str), format, (int) message->getFloat(0));
         PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
         outgoingMessage->initWithTimestampAndSymbol(message->getTimestamp(), str);
@@ -50,7 +50,7 @@ void MessageMakefilename::processMessage(int inletIndex, PdMessage *message) {
           free(format);
           format = StaticUtils::copyString(message->getSymbol(1));
         } else {
-          char str[snprintf(NULL, 0, format, message->getSymbol(0))+1];
+          char* str(static_cast<char*>(alloca(snprintf(NULL, 0, format, message->getSymbol(0)) + 1)));
           snprintf(str, sizeof(str), format, message->getSymbol(0));
           PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
           outgoingMessage->initWithTimestampAndSymbol(message->getTimestamp(), str);

@@ -40,7 +40,7 @@ DspMinimum::~DspMinimum() {
 }
 
 string DspMinimum::toString() {
-  char str[snprintf(NULL, 0, "%s %g", getObjectLabel(), constant)+1];
+  char* str(static_cast<char*>(alloca(snprintf(NULL, 0, "%s %g", getObjectLabel(), constant)+1)));
   snprintf(str, sizeof(str), "%s %g", getObjectLabel(), constant);
   return  string(str);
 }

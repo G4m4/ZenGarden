@@ -68,7 +68,7 @@ void MessageGreaterThanOrEqualTo::processMessage(int inletIndex, PdMessage *mess
 }
 
 std::string MessageGreaterThanOrEqualTo::toString() {
-  char str[snprintf(NULL, 0, ">= %g", constant)+1];
+  char* str(static_cast<char*>(alloca(snprintf(NULL, 0, ">= %g", constant) + 1)));
   snprintf(str, sizeof(str), ">= %g", constant);
   return string(str);
 }

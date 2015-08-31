@@ -45,7 +45,7 @@ void DspPrint::processMessage(int inletIndex, PdMessage *message) {
     }
     totalLength += snprintf(NULL, 0, "%g", inputBuffer[bufferMaxIndex]);
     
-    char buffer[totalLength];
+    char* buffer = static_cast<char*>(alloca(totalLength));
     
     int pos = snprintf(buffer, totalLength, "%s:\n", name);
     for (int i = 0; i < bufferMaxIndex; i++) {

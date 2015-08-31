@@ -711,7 +711,7 @@ void PdGraph::computeDeepLocalDspProcessOrder() {
 
 void PdGraph::printErr(const char *msg, ...) {
   int maxStringLength = 1024;
-  char stringBuffer[maxStringLength];
+  char* stringBuffer(static_cast<char*>(alloca(maxStringLength)));
   va_list ap;
   va_start(ap, msg);
   vsnprintf(stringBuffer, maxStringLength-1, msg, ap);
@@ -722,7 +722,7 @@ void PdGraph::printErr(const char *msg, ...) {
 
 void PdGraph::printStd(const char *msg, ...) {
   int maxStringLength = 1024;
-  char stringBuffer[maxStringLength];
+  char* stringBuffer(static_cast<char*>(alloca(maxStringLength)));
   va_list ap;
   va_start(ap, msg);
   vsnprintf(stringBuffer, maxStringLength-1, msg, ap);

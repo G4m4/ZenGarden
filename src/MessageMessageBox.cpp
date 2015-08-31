@@ -55,7 +55,8 @@ MessageMessageBox::MessageMessageBox(char *initString, PdGraph *graph) : Message
     // StaticUtils::tokenizeString does not remove the trailing ";" from the
     // original string. We should not process it because it will result in an empty message. 
     if (strcmp(initString.c_str(), ";") != 0) {
-      char str[initString.size()+1]; strcpy(str, initString.c_str());
+      char* str(static_cast<char*>(alloca(initString.size()+1)));
+      strcpy(str, initString.c_str());
       message->initWithString(0.0, maxElements, str);
       localMessageList.push_back(message->copyToHeap());
     }
@@ -72,7 +73,8 @@ MessageMessageBox::MessageMessageBox(char *initString, PdGraph *graph) : Message
       string messageString = string(initString, initString.find(" ")+1);
       int maxElements = (messageString.size()/2)+1;
       PdMessage *message = PD_MESSAGE_ON_STACK(maxElements);
-      char str[messageString.size()+1]; strcpy(str, messageString.c_str());
+      char* str(static_cast<char*>(alloca(messageString.size() + 1)));
+      strcpy(str, messageString.c_str());
       message->initWithString(0.0, maxElements, str);
       MessageNamedDestination namedDestination = 
           make_pair(StaticUtils::copyString(name.c_str()), message->copyToHeap());

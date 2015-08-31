@@ -46,7 +46,7 @@ PdFileParser::PdFileParser(string directory, string filename) {
     fseek(fp, 0, SEEK_END);
     long int posEnd = ftell(fp);
     int numChars = posEnd - posStart;
-    char str[numChars+1];
+    char* str(static_cast<char*>(alloca(numChars+1)));
     fseek(fp, 0, SEEK_SET); // seek back to the beginning of the file
     fread(str, sizeof(char), numChars, fp); // read the whole file into memory
     fclose(fp); // close the file

@@ -41,7 +41,7 @@ DspClip::~DspClip() {
 }
 
 std::string DspClip::toString() {
-  char str[snprintf(NULL, 0, "%s %g %g", getObjectLabel(), lowerBound, upperBound)+1];
+  char* str(static_cast<char*>(alloca(snprintf(NULL, 0, "%s %g %g", getObjectLabel(), lowerBound, upperBound)+1)));
   snprintf(str, sizeof(str), "%s %g %g", getObjectLabel(), lowerBound, upperBound);
   return str;
 }

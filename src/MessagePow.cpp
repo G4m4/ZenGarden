@@ -36,7 +36,7 @@ MessagePow::~MessagePow() {
 }
 
 std::string MessagePow::toString() {
-  char str[snprintf(NULL, 0, "pow %g", constant)+1];
+  char* str(static_cast<char*>(alloca(snprintf(NULL, 0, "pow %g", constant) + 1)));
   snprintf(str, sizeof(str), "pow %g", constant);
   return string(str);
 }

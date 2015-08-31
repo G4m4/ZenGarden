@@ -343,7 +343,7 @@ void PdMessage::freeMessage() {
 
 char *PdMessage::toString() {
   // http://stackoverflow.com/questions/295013/using-sprintf-without-a-manually-allocated-buffer
-  int lengths[numElements]; // how long is the string of each atom
+  int* lengths(static_cast<int*>(alloca(sizeof(int) * numElements))); // how long is the string of each atom
   char *finalString; // the final buffer we will pass back after concatenating all strings - user should free it
   int size = 0; // the total length of our final buffer
   int pos = 0;

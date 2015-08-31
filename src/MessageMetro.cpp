@@ -38,7 +38,7 @@ MessageMetro::~MessageMetro() {
 }
 
 string MessageMetro::toString() {
-  char str[snprintf(NULL, 0, "%s %g", getObjectLabel(), intervalInMs)+1];
+  char* str(static_cast<char*>(alloca(snprintf(NULL, 0, "%s %g", getObjectLabel(), intervalInMs) + 1)));
   snprintf(str, sizeof(str), "%s %g", getObjectLabel(), intervalInMs);
   return string(str);
 }

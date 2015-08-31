@@ -75,7 +75,7 @@ DspEnvelope::~DspEnvelope() {
 }
 
 string DspEnvelope::toString() {
-  char str[snprintf(NULL, 0, "%s %i %i", getObjectLabel(), windowSize, windowInterval)+1];
+  char* str(static_cast<char*>(alloca(snprintf(NULL, 0, "%s %i %i", getObjectLabel(), windowSize, windowInterval)+1)));
   snprintf(str, sizeof(str), "%s %i %i", getObjectLabel(), windowSize, windowInterval);
   return string(str);
 }

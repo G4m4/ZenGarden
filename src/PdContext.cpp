@@ -483,7 +483,8 @@ void PdContext::scheduleExternalMessage(const char *receiverName, double timesta
   // do the heavy lifting of string parsing before the lock (minimise the critical section)
   int maxElements = (strlen(initString)/2)+1;
   PdMessage *message = PD_MESSAGE_ON_STACK(maxElements);
-  char str[strlen(initString)+1]; strcpy(str, initString);
+  char* str(static_cast<char*>(alloca(strlen(initString) + 1)));
+  strcpy(str, initString);
   message->initWithString(timestamp, maxElements, str);
   
   lock(); // lock and load
