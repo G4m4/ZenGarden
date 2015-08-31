@@ -23,16 +23,21 @@
 #ifndef _ARRAY_ARITHMETIC_H_
 #define _ARRAY_ARITHMETIC_H_
 
-#if __APPLE__
-// The Accelerate framework is a library of tuned vector operations
-#include <Accelerate/Accelerate.h>
-#endif
-#if __SSE__
-#include <xmmintrin.h>
-#elif __ARM_NEON__
-// __ARM_NEON__ is defined by the compiler if the arguments "-mfloat-abi=softfp -mfpu=neon" are passed.
-#include <arm_neon.h>
-#endif
+#include "Configuration.h"
+
+#if _OS_MACOSX
+  // On Apple platforms use Accelerate framework which will pick the best implementation
+  #include <Accelerate/Accelerate.h>
+#else  // _OS_MACOSX
+  // Otherwise manually select
+  #if _USE_SSE
+    #include <xmmintrin.h>
+  #elif _USE_NEON
+    #include <arm_neon.h>
+  #else  // _USE_SSE
+    // Nothing gets included, scalar arithmetic
+  #endif  // _USE_SSE
+#endif  // _OS_MACOSX
 
 /**
  * This class offers static inline functions for computing basic arithmetic with float arrays.
@@ -44,9 +49,10 @@ class ArrayArithmetic {
   public:
   
     static inline void add(float *input0, float *input1, float *output, int startIndex, int endIndex) {
-      #if __APPLE__
+#if _OS_MACOSX
       vDSP_vadd(input0+startIndex, 1, input1+startIndex, 1, output+startIndex, 1, endIndex-startIndex);
-      #elif __SSE__
+#else  // _OS_MACOSX
+#if _USE_SSE
       input0 += startIndex;
       input1 += startIndex;
       output += startIndex;
@@ -72,7 +78,7 @@ class ArrayArithmetic {
         case 1: *output++ = *input0++ + *input1++;
         case 0: default: break;
       }
-      #elif __ARM_NEON__
+#elif _USE_NEON
       input0 += startIndex;
       input1 += startIndex;
       output += startIndex;
@@ -95,17 +101,19 @@ class ArrayArithmetic {
         case 1: *output++ = *input0++ + *input1++;
         default: break;
       }
-      #else
+#else  // _USE_SSE
       for (int i = startIndex; i < endIndex; i++) {
         output[i] = input0[i] + input1[i];
       }
-      #endif
+#endif  // _USE_SSE
+#endif  // _OS_MACOSX
     }
   
     static inline void add(float *input, float constant, float *output, int startIndex, int endIndex) {
-      #if __APPLE__
+#if _OS_MACOSX
       vDSP_vsadd(input+startIndex, 1, &constant, output+startIndex, 1, endIndex-startIndex);
-      #elif __SSE__
+#else  // _OS_MACOSX
+#if _USE_SSE
       input += startIndex;
       output += startIndex;
       int n = endIndex - startIndex;
@@ -131,7 +139,7 @@ class ArrayArithmetic {
         case 1: *output++ += constant;
         case 0: default: break;
       }
-      #elif __ARM_NEON__
+#elif _USE_NEON
       input += startIndex;
       output += startIndex;
       int n = endIndex - startIndex;
@@ -151,18 +159,20 @@ class ArrayArithmetic {
         case 1: *output++ += constant;
         default: break;
       }
-      #else
+#else  // _USE_SSE
       for (int i = startIndex; i < endIndex; i++) {
         output[i] = input[i] + constant;
       }
-      #endif
+#endif  // _USE_SSE
+#endif  // _OS_MACOSX
     }
     
     // output = input0 - input1
     static inline void subtract(float *input0, float *input1, float *output, int startIndex, int endIndex) {
-      #if __APPLE__
+#if _OS_MACOSX
       vDSP_vsub(input1+startIndex, 1, input0+startIndex, 1, output+startIndex, 1, endIndex-startIndex);
-      #elif __SSE__
+#else  // _OS_MACOSX
+#if _USE_SSE
       input0 += startIndex;
       input1 += startIndex;
       output += startIndex;
@@ -187,7 +197,7 @@ class ArrayArithmetic {
         case 1: *output++ = *input0++ - *input1++;
         case 0: default: break;
       }
-      #elif __ARM_NEON__
+#elif _USE_NEON
       input0 += startIndex;
       input1 += startIndex;
       output += startIndex;
@@ -210,18 +220,20 @@ class ArrayArithmetic {
         case 1: *output++ = *input0++ - *input1++;
         default: break;
       }
-      #else
+#else // _USE_SSE
       for (int i = startIndex; i < endIndex; i++) {
         output[i] = input0[i] - input1[i];
       }
-      #endif
+#endif  // _USE_SSE
+#endif  // _OS_MACOSX
     }
   
     static inline void subtract(float *input, float constant, float *output, int startIndex, int endIndex) {
-      #if __APPLE__
+#if _OS_MACOSX
       float negation = -1.0f * constant;
       vDSP_vsadd(input+startIndex, 1, &negation, output+startIndex, 1, endIndex-startIndex);
-      #elif __SSE__
+#else  // _OS_MACOSX
+#if _USE_SSE
       input += startIndex;
       output += startIndex;
       int n = endIndex - startIndex;
@@ -246,7 +258,7 @@ class ArrayArithmetic {
         case 1: *output++ -= constant;
         case 0: default: break;
       }
-      #elif __ARM_NEON__
+#elif _USE_NEON
       input += startIndex;
       output += startIndex;
       int n = endIndex - startIndex;
@@ -266,17 +278,19 @@ class ArrayArithmetic {
         case 1: *output++ -= constant;
         default: break;
       }
-      #else
+#else // _USE_SSE
       for (int i = startIndex; i < endIndex; i++) {
         output[i] = input[i] - constant;
       }
-      #endif
+#endif  // _USE_SSE
+#endif  // _OS_MACOSX
     }
     
     static inline void multiply(float *input0, float *input1, float *output, int startIndex, int endIndex) {
-      #if __APPLE__
+#if _OS_MACOSX
       vDSP_vmul(input0+startIndex, 1, input1+startIndex, 1, output+startIndex, 1, endIndex-startIndex);
-      #elif __SSE__
+#else  // _OS_MACOSX
+#if _USE_SSE
       input0 += startIndex;
       input1 += startIndex;
       output += startIndex;
@@ -301,7 +315,7 @@ class ArrayArithmetic {
         case 1: *output++ = *input0++ * *input1++;
         case 0: default: break;
       }
-      #elif __ARM_NEON__
+#elif _USE_NEON
       input0 += startIndex;
       input1 += startIndex;
       output += startIndex;
@@ -324,17 +338,19 @@ class ArrayArithmetic {
         case 1: *output++ = *input0++ * *input1++;
         default: break;
       }
-      #else
+#else // _USE_SSE
       for (int i = startIndex; i < endIndex; i++) {
         output[i] = input0[i] * input1[i];
-      }
-      #endif
+    }
+#endif  // _USE_SSE
+#endif  // _OS_MACOSX
     }
   
     static inline void multiply(float *input, float constant, float *output, int startIndex, int endIndex) {
-      #if __APPLE__
+#if _OS_MACOSX
       vDSP_vsmul(input+startIndex, 1, &constant, output+startIndex, 1, endIndex-startIndex);
-      #elif __SSE__
+#else  // _OS_MACOSX
+#if _USE_SSE
       input += startIndex;
       output += startIndex;
       int n = endIndex - startIndex;
@@ -359,7 +375,7 @@ class ArrayArithmetic {
         case 1: *output++ *= constant;
         case 0: default: break;
       }
-      #elif __ARM_NEON__
+#elif _USE_NEON
       input += startIndex;
       output += startIndex;
       int n = endIndex - startIndex;
@@ -379,18 +395,20 @@ class ArrayArithmetic {
         case 1: *output++ *= constant;
         default: break;
       }
-      #else
+#else // _USE_SSE
       for (int i = startIndex; i < endIndex; i++) {
         output[i] = input[i] * constant;
       }
-      #endif
+#endif  // _USE_SSE
+#endif  // _OS_MACOSX
     }
     
     // recipocal: vrecpeq_f32
     static inline void divide(float *input0, float *input1, float *output, int startIndex, int endIndex) {
-      #if __APPLE__
+#if _OS_MACOSX
       vDSP_vdiv(input1+startIndex, 1, input0+startIndex, 1, output+startIndex, 1, endIndex-startIndex);
-      #elif __SSE__
+#else  // _OS_MACOSX
+#if _USE_SSE
       input0 += startIndex;
       input1 += startIndex;
       output += startIndex;
@@ -415,17 +433,19 @@ class ArrayArithmetic {
         case 1: *output++ = *input0++ / *input1++;
         case 0: default: break;
       }
-      #else
+#else // _USE_SSE
       for (int i = startIndex; i < endIndex; i++) {
         output[i] = input0[i] / input1[i];
       }
-      #endif
+#endif  // _USE_SSE
+#endif  // _OS_MACOSX
     }
   
     static inline void divide(float *input, float constant, float *output, int startIndex, int endIndex) {
-      #if __APPLE__
+#if _OS_MACOSX
       vDSP_vsdiv(input+startIndex, 1, &constant, output+startIndex, 1, endIndex-startIndex);
-      #elif __SSE__
+#else  // _OS_MACOSX
+#if _USE_SSE
       input += startIndex;
       output += startIndex;
       int n = endIndex - startIndex;
@@ -450,17 +470,19 @@ class ArrayArithmetic {
         case 1: *output++ /= constant;
         case 0: default: break;
       }
-      #else
+#else // _USE_SSE
       for (int i = startIndex; i < endIndex; i++) {
         output[i] = input[i] / constant;
       }
-      #endif
+#endif  // _USE_SSE
+#endif  // _OS_MACOSX
     }
   
     static inline void fill(float *input, float constant, int startIndex, int endIndex) {
-      #if __APPLE__
+#if _OS_MACOSX
       vDSP_vfill(&constant, input+startIndex, 1, endIndex-startIndex);
-      #elif __SSE__
+#else  // _OS_MACOSX
+#if _USE_SSE
       input += startIndex;
       int n = endIndex - startIndex;
       
@@ -484,7 +506,7 @@ class ArrayArithmetic {
         case 1: *input++ = constant;
         case 0: default: break;
       }
-      #elif __ARM_NEON__
+#elif _USE_NEON
       input += startIndex;
       int n = endIndex - startIndex;
       int n4 = n & 0xFFFFFFFC; // force n to be a multiple of 4
@@ -500,11 +522,12 @@ class ArrayArithmetic {
         case 1: *input++ = constant;
         default: break;
       }
-      #else
+#else // _USE_SSE
       for (int i = startIndex; i < endIndex; i++) {
         input[i] = constant;
       }
-      #endif
+#endif  // _USE_SSE
+#endif  // _OS_MACOSX
     }
     
   private:

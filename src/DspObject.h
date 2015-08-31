@@ -24,17 +24,21 @@
 #define _DSP_OBJECT_H_
 
 #include <queue>
+#include "Configuration.h"
+
 #include "ArrayArithmetic.h"
 #include "MessageObject.h"
 
-#if __SSE__
-// allocate memory aligned to 16-bytes memory boundary
-#define ALLOC_ALIGNED_BUFFER(_numBytes) (float *) _mm_malloc(_numBytes, 16)
-#define FREE_ALIGNED_BUFFER(_buffer) _mm_free(_buffer)
-#else
-// NOTE(mhroth): valloc seems to work well, but is deprecated!
-#define ALLOC_ALIGNED_BUFFER(_numBytes) (float *) valloc(_numBytes)
+// Don't bother and always align to 16 bytes
+// With GCC and clang use standard C11 routine
+#if _COMPILER_GCC
+#define ALLOC_ALIGNED_BUFFER(_numBytes) static_cast<float *>(aligned_alloc(16, _numBytes))
 #define FREE_ALIGNED_BUFFER(_buffer) free(_buffer)
+#elif _COMPILER_MSVC
+#define ALLOC_ALIGNED_BUFFER(_numBytes) static_cast<float *>(_aligned_malloc(_numBytes, 16))
+#define FREE_ALIGNED_BUFFER(_buffer) _aligned_free(_buffer)
+#else
+#error Unknown compiler
 #endif
 
 typedef std::pair<PdMessage *, unsigned int> MessageLetPair;

@@ -23,7 +23,12 @@
 #ifndef _PD_MESSAGE_H_
 #define _PD_MESSAGE_H_
 
+#include "Configuration.h"
+
+#if _COMPILER_GCC
 #include <alloca.h>
+#endif  // _COMPILER_GCC
+
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
