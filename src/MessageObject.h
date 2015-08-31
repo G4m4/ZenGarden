@@ -27,10 +27,13 @@
 #include <string>
 #include <vector>
 #include <math.h>
+
+#include "C99.h"
 #include "ConnectionType.h"
 #include "ObjectType.h"
 #include "PdMessage.h"
 #include "StaticUtils.h"
+
 using namespace std;
 
 class DspObject;

@@ -24,6 +24,8 @@
 #define _DSP_OBJECT_H_
 
 #include <queue>
+
+#include "C99.h"
 #include "Configuration.h"
 
 #include "ArrayArithmetic.h"

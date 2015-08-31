@@ -27,6 +27,7 @@
 
 #include <regex>
 
+#include "C99.h"
 #include "StaticUtils.h"
 
 StaticUtils::StaticUtils() {

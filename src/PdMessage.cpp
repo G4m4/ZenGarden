@@ -20,6 +20,8 @@
  *
  */
 
+#include "C99.h"
+
 #include "PdMessage.h"
 #include "StaticUtils.h"
 
