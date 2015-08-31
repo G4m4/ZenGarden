@@ -128,9 +128,13 @@ PdGraph *PdFileParser::execute(PdMessage *initMsg, PdGraph *graph, PdContext *co
   MessageTable *lastArrayCreated = NULL;  // used to know on which table the #A line values have to be set
   int lastArrayCreatedIndex = 0;
   while (!(message = nextMessage()).empty()) {
+    // Trim any newline
+    message = message.substr(0, message.find(";"));
     // create a non-const copy of message such that strtok can modify it
-    char line[message.size()+1];
-    strncpy(line, message.c_str(), sizeof(line));
+    const std::size_t message_length = message.size();
+    char line[256];
+    strncpy(line, message.c_str(), message_length);
+    line[message_length] = '\0';
     
     char *hashType = strtok(line, " ");
 
