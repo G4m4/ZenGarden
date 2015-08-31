@@ -21,6 +21,9 @@
  */
 
 #include <string.h>
+
+#include <regex>
+
 #include "DeclareList.h"
 #include "StaticUtils.h"
 
@@ -55,7 +58,12 @@ void DeclareList::addPath(const char *path) {
 }
 
 bool DeclareList::isFullPath(const char *path) {
-  return (path[0] == '/');
+  // Really cheap way to do that:
+  // match "C:" (also other drive letters...) or "\"
+  const std::string regex_pattern("/|[a-zA-Z]{1}:");
+  const std::regex preg(regex_pattern);
+  const bool isFullPath = std::regex_search(path, path + 2, preg);
+  return isFullPath;
 }
 
 bool DeclareList::hasTrailingSlash(const char *path) {
